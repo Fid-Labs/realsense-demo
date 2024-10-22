@@ -24,5 +24,5 @@ make -j
 
 ## RealSense Resources
 
-[API Reference](https://intelrealsense.github.io/librealsense/doxygen/index.html)
+[API Reference](https://intelrealsense.github.io/librealsense/doxygen/annotated.html)
 [SDK Repository](https://github.com/IntelRealSense/librealsense)
