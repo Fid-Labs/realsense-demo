@@ -24,7 +24,8 @@ target_include_directories(realsense_demo PRIVATE
 
 # Link libraries
 target_link_libraries(realsense_demo PRIVATE
-    ${realsense2_LIBRARIES}
+    # ${realsense2_LIBRARIES}
+    realsense2::realsense2
 )
 
 # Add threading support
