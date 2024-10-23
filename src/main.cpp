@@ -7,7 +7,7 @@
 
 int main()
 {
-    auto camera = std::make_unique<IntelRealSense>();
+    auto camera = std::make_unique<realsense::IntelRealSense>();
     DepthCameraService service(std::move(camera));
 
     if (!service.init(640, 480, 30))
