@@ -14,15 +14,18 @@ class IntelRealSense : public DepthCamera {
 public:
     bool configure(int width, int height, int fps) override;
 
-    //Depth Sensor
+    // Depth Sensor
     float getDepthScale(rs2::device dev);
     void set_depth_sensor(const rs2::depth_sensor& sensor);
     rs2::depth_sensor get_depth_sensor() const;
 
-    //ROI Sensor
+    // ROI Sensor
     void set_region_of_interest(const rs2::region_of_interest& roi);
     rs2::region_of_interest get_region_of_interest() const;
     bool has_roi() const;
+
+    // Temperature Test - returns true if temperature is within valid operating range (15-35°C)
+    bool isTemperatureValid(float temperature) const;
 
 protected:
     void captureFrame() override;
