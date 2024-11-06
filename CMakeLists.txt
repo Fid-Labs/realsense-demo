@@ -39,48 +39,48 @@ target_link_libraries(realsense_demo PRIVATE
 )
 
 # Google Test executable
-add_executable(intel_real_sense_gtest
-    tests/intel_real_sense_gtest.cpp
+add_executable(intelRealSenseGoogleTest
+    tests/intelRealSenseGoogleTest.cpp
 )
 
-target_include_directories(intel_real_sense_gtest PRIVATE
+target_include_directories(intelRealSenseGoogleTest PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${GTEST_INCLUDE_DIRS}
 )
 
-target_link_libraries(intel_real_sense_gtest PRIVATE
+target_link_libraries(intelRealSenseGoogleTest PRIVATE
     realsense_lib
     GTest::gtest_main
     GTest::gmock_main
 )
 
 # Boost Test executable
-add_executable(intel_real_sense_boost_test
-    tests/intel_real_sense_boost_test.cpp
+add_executable(intelRealSenseBoostTest
+    tests/intelRealSenseBoostTest.cpp
 )
 
-target_include_directories(intel_real_sense_boost_test PRIVATE
+target_include_directories(intelRealSenseBoostTest PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${Boost_INCLUDE_DIRS}
 )
 
-target_link_libraries(intel_real_sense_boost_test PRIVATE
+target_link_libraries(intelRealSenseBoostTest PRIVATE
     realsense_lib
     Boost::unit_test_framework
 )
 
 # Add compile definition for Boost Test
-target_compile_definitions(intel_real_sense_boost_test PRIVATE
+target_compile_definitions(intelRealSenseBoostTest PRIVATE
     BOOST_TEST_DYN_LINK
 )
 
 # Enable testing
 enable_testing()
-add_test(NAME intel_real_sense_gtest COMMAND intel_real_sense_gtest)
-add_test(NAME intel_real_sense_boost_test COMMAND intel_real_sense_boost_test)
+add_test(NAME intelRealSenseGoogleTest COMMAND intelRealSenseGoogleTest)
+add_test(NAME intelRealSenseBoostTest COMMAND intelRealSenseBoostTest)
 
 # Optional: Add a custom target to run all tests
 add_custom_target(run_all_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS intel_real_sense_gtest intel_real_sense_boost_test
+    DEPENDS intelRealSenseGoogleTest intelRealSenseBoostTest
 )
