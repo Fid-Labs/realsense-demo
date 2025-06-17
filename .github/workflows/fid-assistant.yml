@@ -59,7 +59,9 @@ jobs:
           bedrock_aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
           bedrock_aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           bedrock_aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
-          
+
+          trigger_phrase: "@fid"
+          assignee_trigger: "fid"
           # Model configuration
           model: "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
           
