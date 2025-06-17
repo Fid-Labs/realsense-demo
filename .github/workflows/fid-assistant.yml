@@ -89,6 +89,7 @@ jobs:
             mcp__fid__fid_search
             mcp__fid*
             mcp__fid-mcp__fid-search
+            mcp__fid__fid-search
 
           # FID-enhanced system prompt with custom branding
           custom_instructions: |
@@ -108,9 +109,4 @@ jobs:
             - Git operations for version control
             - NPM commands for package management
 
-            ## Guidelines:
-            1. Always check for Fid-specific configurations in the repository
-            2. Follow the project's existing patterns and conventions
-            3. Create comprehensive solutions with proper error handling
-            4. Document your changes clearly in commits and PR descriptions
-            5. Use semantic commit messages (feat:, fix:, docs:, etc.)
+            If you need to search the codebase or for any context at all, use the `fid-search` tool to analyze the code.
