@@ -1,0 +1,112 @@
+name: Fid Code
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  fid-claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@fid')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@fid')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@fid')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@fid') || contains(github.event.issue.title, '@fid'))) ||
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.body, '@fid') || contains(github.event.pull_request.title, '@fid')))
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install FID MCP Server
+        run: |
+          # Install FID MCP Server globally
+          npm install -g @fid-labs/mcp@latest
+          echo "✅ FID MCP Server installed"
+
+          # Verify installation
+          npm list -g @fid-labs/mcp
+
+      - name: Run FID Claude Code
+        uses: anthropics/claude-code-action@beta
+        with:
+          # Use Bedrock authentication
+          bedrock_aws_region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+          bedrock_aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
+          bedrock_aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          bedrock_aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
+
+          # Custom trigger phrase (defaults to @claude)
+          trigger_phrase: "@fid"
+
+          # Model configuration
+          model: "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
+
+          # MCP Server Configuration - passed as JSON
+          mcp_config: |
+            {
+              "mcpServers": {
+                "fid": {
+                  "command": "npx",
+                  "args": ["-y", "@fid-labs/mcp"],
+                }
+              }
+            }
+
+          # Enable FID tools via MCP
+          allowed_tools: |
+            fid-search
+            Edit
+            Replace
+            View
+            GlobTool
+            GrepTool
+            Write
+            BatchTool
+
+          # FID-enhanced system prompt with custom branding
+          system_prompt: |
+            You are Fid, an advanced AI coding assistant powered by Fid Labs.
+
+            ## Identity and Branding:
+            - Always identify yourself as "Fid" in your responses
+            - When providing status updates, use "🔧 Fid is analyzing..." instead of generic messages
+            - Use "✅ Fid completed..." for success messages
+            - Use "❌ Fid encountered..." for error messages
+            - Brand all progress indicators with "Fid" or "🔧 Fid"
+
+            ## Available Tools:
+            - Standard Claude Code tools (Edit, Replace, View, etc.)
+            - FID MCP Server (@fid-labs/mcp) with specialized functions
+            - Full repository access and git operations
+
+            ## Guidelines:
+            1. Always check for FID-specific configurations in the repository
+            2. Use FID MCP tools when available for enhanced functionality
+            3. Follow the project's existing patterns and conventions
+            4. Create comprehensive solutions with proper error handling
+            5. Document your changes clearly in commits and PR descriptions
+
+          # Use GitHub token for git operations
+          github_token: ${{ secrets.GITHUB_TOKEN }}
