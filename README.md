@@ -4,6 +4,10 @@ This repository includes a basic, generic C++ service for controlling and captur
 
 For a tutorial on this, see [docs.fidlabs.ai](https://docs.fidlabs.ai/en/latest/).
 
+## About Fid Labs
+
+This repository is created and maintained by [Fid Labs](https://fidlabs.ai). Fid Labs specializes in building AI-powered tools for developers, streamlining integration with hardware devices like the Intel RealSense camera. Our mission is to simplify complex technical implementations and enable developers to focus on creating innovative applications.
+
 ## Linux Setup
 
 Follow the [librealsense install guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md) (Be sure to include the optional `librealsense2-dev`).
