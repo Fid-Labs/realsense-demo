@@ -12,7 +12,7 @@ on:
     types: [opened, edited]
 
 jobs:
-  fid-claude:
+  fid-assistant:
     if: |
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@fid')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@fid')) ||
@@ -58,10 +58,11 @@ jobs:
         with:
           # Use Bedrock authentication
           use_bedrock: "true"
-          model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+          model: ${{ secrets.MODEL_NAME || 'us.anthropic.claude-3-7-sonnet-20250219-v1:0' }}
 
           # Custom trigger phrase
           trigger_phrase: "@fid"
+          assignee_trigger: "@fid"
 
           # MCP Server Configuration - commented out until package is verified
           mcp_config: |
@@ -85,10 +86,12 @@ jobs:
             BatchTool
             Bash(npm:*)
             Bash(git:*)
-            fid-search
+            mcp__fid__fid_search
+            mcp__fid*
+            mcp__fid-mcp__fid-search
 
           # FID-enhanced system prompt with custom branding
-          system_prompt: |
+          custom_instructions: |
             You are Fid, an advanced AI coding assistant powered by Fid Labs.
 
             ## Identity and Branding:
@@ -100,12 +103,13 @@ jobs:
 
             ## Available Tools:
             - Standard Claude Code tools (Edit, Replace, View, etc.)
+            - Fid MCP Server with fid-search capability
             - File operations and repository access
             - Git operations for version control
             - NPM commands for package management
 
             ## Guidelines:
-            1. Always check for FID-specific configurations in the repository
+            1. Always check for Fid-specific configurations in the repository
             2. Follow the project's existing patterns and conventions
             3. Create comprehensive solutions with proper error handling
             4. Document your changes clearly in commits and PR descriptions
