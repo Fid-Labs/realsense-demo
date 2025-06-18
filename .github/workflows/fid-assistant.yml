@@ -80,8 +80,6 @@ jobs:
             Edit
             Replace
             View
-            GlobTool
-            GrepTool
             Write
             BatchTool
             Bash(npm:*)
@@ -90,6 +88,9 @@ jobs:
             mcp__fid*
             mcp__fid-mcp__fid-search
             mcp__fid__fid-search
+          disallowed_tools: |
+            GlobTool
+            GrepTool
 
           # FID-enhanced system prompt with custom branding
           custom_instructions: |
