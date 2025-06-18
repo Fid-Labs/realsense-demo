@@ -22,6 +22,69 @@ Documentation for this project is structured with multiple layers to support dif
 
 For more detailed implementation guidance, the project references the comprehensive Fid Labs documentation site (docs.fidlabs.ai), which provides tutorials on camera integration. The codebase itself is supported by technical reference material in the docs directory, including hardware specifications like the Intel RealSense D400 Series Datasheet, which details the camera's capabilities, limitations, and operating parameters for proper integration and usage.
 
+## Codebase Structure: File-by-File Guide
+
+### `src/DepthCamera.h` and `src/DepthCamera.cpp`
+Defines the abstract base class for depth camera functionality. Implements a template method pattern where concrete subclasses implement the `captureFrame()` method while inheriting common streaming functionality. Key features include thread-safe streaming control using std::atomic and std::thread.
+
+### `src/IntelRealSense.h` and `src/IntelRealSense.cpp`
+Implements the concrete Intel RealSense camera functionality by inheriting from the DepthCamera base class. Includes specialized features like depth scale calibration, region of interest (ROI) specification, and temperature validation to ensure optimal operating conditions.
+
+### `src/DepthCameraService.h` and `src/DepthCameraService.cpp`
+Provides a service layer that encapsulates camera operation for client applications. Demonstrates dependency injection pattern by accepting any DepthCamera implementation via std::unique_ptr, promoting loose coupling and testability.
+
+### `src/main.cpp`
+Demonstrates a simple application using the camera service. Shows proper memory management with smart pointers, error handling, and resource cleanup.
+
+### `tests/intelRealSenseGoogleTest.cpp`
+Implements unit tests using Google Test framework. Demonstrates test fixtures, parameterized tests, and multiple assertion styles for comprehensive validation of camera functionality.
+
+### `tests/intelRealSenseBoostTest.cpp`
+Provides complementary tests using the Boost Test framework, showcasing alternative testing approaches within the same codebase.
+
+### `CMakeLists.txt`
+Orchestrates the build system configuration, including library and dependency management, test integration, and custom targets for convenient operation.
+
+## C++ Programming Techniques and Tips
+
+### 1. RAII and Resource Management
+This codebase demonstrates modern C++ resource management through the RAII (Resource Acquisition Is Initialization) pattern:
+- Smart pointers (std::unique_ptr) manage dynamic memory in DepthCameraService
+- Thread resources are properly acquired and released in DepthCamera's streaming functions
+- No raw new/delete operations, ensuring leak-free code
+
+### 2. Polymorphism and Inheritance
+- Abstract base class (`DepthCamera`) defines the interface with pure virtual methods
+- Concrete implementation (`IntelRealSense`) provides specific functionality
+- Virtual destructors ensure proper cleanup of derived class resources
+
+### 3. Thread Safety
+- `std::atomic<bool>` for thread-safe flag operations without mutex overhead
+- Clean thread joining pattern in `stopStreaming()` preventing thread leaks
+- Single responsibility principle applied to thread management methods
+
+### 4. Interface Segregation
+- Clean separation between general camera interface and specific implementations
+- Public API contains only essential methods while implementation details remain protected/private
+- Strong encapsulation by using the pImpl idiom (Pointer to Implementation) implicitly through inheritance
+
+### 5. Dependency Injection
+- Service class accepts camera implementation via constructor injection
+- Use of std::move for efficient transfer of unique ownership
+- Allows for easy testing with mock objects and runtime substitution of implementations
+
+### 6. Modern Testing Approaches
+- Fixture-based tests for shared setup/teardown
+- Parameterized tests for efficient validation of multiple inputs
+- Multiple assertion styles (EXPECT vs ASSERT) for different verification needs
+- Custom failure messages for improved debugging
+
+### 7. Building with CMake
+- Separation of library and executable targets
+- Proper handling of include paths and visibility (PUBLIC vs PRIVATE)
+- Integration of multiple test frameworks in a single project
+- Custom targets (run_all_tests) for improved developer experience
+
 ## Linux Setup
 
 Follow the [librealsense install guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md) (Be sure to include the optional `librealsense2-dev`).
